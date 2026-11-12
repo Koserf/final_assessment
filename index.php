@@ -1,7 +1,19 @@
 <?php
 
 include "db.php";
-$sql = $conn->prepare("SELECT * FROM results2");
+include "auth.php";
+
+$search = $_GET['search'] ?? "";
+
+$like = "%$search%";
+
+//$sql = $conn->prepare("SELECT * FROM results2");
+$sql = $conn->prepare("SELECT * FROM results2
+WHERE student_name LIKE ? OR matric_number LIKE ? OR subject_name LIKE ? OR subject_code LIKE ?");
+
+$sql ->bind_param("ssss", $like, $like, $like, $like);
+
+//s = string, i = integer, d = double
 
 $sql->execute();
 
@@ -24,11 +36,14 @@ include "header.php";
 
     <h2>Student Records</h2>
 
-    <a href="">Add Result</a>
+    <a href="add.php">Add Result</a>
 
-    <input type="text" placeholder="Search by name or id">
-    <button>Search</button>
-    <a href="">Show all</a>
+    <form method="get" action="index.php">
+        <input type="text" name="search" placeholder="Search by name or id"
+        value="<?php $search ?>" >
+        <button type="submit">Search</button>
+        <a href="index.php">Show all</a>
+    </form>
 
     <div>
         <table border="1">
@@ -46,10 +61,11 @@ include "header.php";
             </tr>
 
             <?php
+            $no = 1;
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
 
-                echo "<td>" . $row['id'] . "</td>";
+                echo "<td>" . $no++ . "</td>";
                 echo "<td>" . $row['student_name'] . "</td>";
                 echo "<td>" . $row['matric_number'] . "</td>";
                 echo "<td>" . $row['subject_name'] . "<br>(" . $row['subject_code'] . ")" . "</td>";
@@ -60,8 +76,11 @@ include "header.php";
                 echo "<td>" . $row['grade'] . "</td>";
 
                 echo "<td>";
-                echo "<input style= 'margin: 5px;' type='submit' name='edit' value='Edit'>";
-                echo "<input style= 'margin: 5px;' type='submit' name='delete' value='Delete'>";
+                echo "<button><a href='edit.php?id=" . $row['id'] . "'>Edit</a></button>";
+                echo "<form method='post' action='delete.php' onsubmit='return confirm(\"Are you sure you want to delete this record?\")'>";
+                echo "<input type='hidden' name='delete' value='" . $row['id'] . "'>";
+                echo "<button type='submit'>Delete</button>";
+                echo "</form>";
                 echo "</td>";
 
                 echo "</tr>";

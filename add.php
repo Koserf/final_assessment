@@ -28,52 +28,28 @@ if (isset($_POST['submit'])) {
     $sql = $conn->prepare("INSERT INTO results2
     (student_name,matric_number,subject_name,subject_code,test1,test2,final,total,grade) VALUES 
     ('$student_name','$matric_number','$subject_name','$subject_code', $test1, $test2, $final,$total,'$grade')");
-a
+
     if ($sql->execute()) {
         header("Location: index.php");
     }
 
 }
 
-?>
+$student_name = "";
+$matric_number = "";
+$subject_name = "";
+$subject_code = "";
+$test1 = "";
+$test2 = "";
+$final = "";
 
-<style>
-    label {
-        display: inline-block;
-        width: 15%;
-    }
-</style>
+?>
 
 <h2>ADD RESULT</h2>
 
-<form method="post">
-    <label for="">Student Name</label>
-    <input type="text" name="student_name"> <br><br>
-
-    <label for="">Matric Number</label>
-    <input type="text" name="matric_number"> <br><br>
-
-    <label for="">Subject Name</label>
-    <input type="text" name="subject_name"> <br><br>
-
-    <label for="">Student Code</label>
-    <input type="text" name="subject_code"> <br><br>
-
-    <label for="">Test 1 (20%)</label>
-    <input type="text" name="test1"> <br><br>
-
-    <label for="">Test 2 (30%)</label>
-    <input type="text" name="test2"> <br><br>
-
-    <label for="">Final Examination (50%)</label>
-    <input type="text" name="final"> <br><br>
-
-    <input type="submit" name="submit" value="Submit">
-
-</form>
-
 <?php
 
+include "form.php";
 include "footer.php";
 
 ?>
